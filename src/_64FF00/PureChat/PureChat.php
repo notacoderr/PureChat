@@ -166,27 +166,28 @@ class PureChat extends PluginBase
 
             case "setprefix":
 
-                if(!$sender instanceof Player)
+                if($sender instanceof Player)
                 {
-                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " This command can be only used in-game.");
+                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " This command can be only used from console.");
 
                     return true;
                 }
-
-                if(!isset($args[0]))
+                if(!($this->getServer()->getPlayer($args[0]) instance of Player))
                 {
-                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Usage: /setprefix <prefix>");
-
+                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Player is offline");
+                    return true;
+                }
+                if(!isset($args[1]))
+                {
+                    $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Usage: /setprefix <player> <prefix>");
                     return true;
                 }
 
                 $levelName = $this->config->get("enable-multiworld-chat") ? $sender->getLevel()->getName() : null;
+                
+                $this->setPrefix($args[1], $this->getServer()->getPlayer($args[0]), $levelName);
 
-                $prefix = str_replace("{BLANK}", ' ', implode('', $args));
-
-                $this->setPrefix($prefix, $sender, $levelName);
-
-                $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set your prefix to " . $prefix . ".");
+                //$sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set your prefix to " . $prefix . ".");
 
                 break;
 
