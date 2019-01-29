@@ -1,42 +1,76 @@
-
-# PureChat by 64FF00 (xktiverz@gmail.com, @64ff00 for Twitter)
-
----
-
-# PureChat version string
-# - string
-version: "1.4.10-6"
-
-# Set default factions plugin for PureChat
-# - FactionsPro / null
+version: 1.4.10-6
 default-factions-plugin: FactionsPro
-
-# Enable this if you want to use per-world chat formats / per-world nametags for players
-# - true / false
-enable-multiworld-chat: false
-
-# Please check if you have all PurePerms groups in your server here
-
-# &0: Black, &1: Dark Blue, &2: Dark Green, &3: Dark Aqua, &4: Dark Red, &5: Dark Purple, &6: Gold, &7: Gray, &8: Dark Gray, &9: Blue
-# &a: Green, &b: Aqua, &c: Red, &d: Light Purple, &e: Yellow, &f: White
-# &k: Obfuscated, &l: Bold, &m: Strikethrough, &n: Underline, &o: Italic, &r: Reset
-
-# Available PureChat tags: {display_name}, {msg}, {fac_name}, {fac_rank}, {prefix}, {suffix}, {world}
+enable-multiworld-chat: true
 groups:
   Guest:
-    chat: '&7[Guest] &f{fac_rank}{fac_name}&a {display_name} &7> &f{msg}'
-    nametag: '&7[Guest] &f{display_name}'
-    worlds: []
+    chat: '&8• &l&b{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f- &b{display_name}'
+  Member:
+    chat: '&8• &eᴹᴱᴹᴮᴱᴿ&l&b{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f- &b{display_name}'
+  Premium:
+    chat: '&8• &eᴾ&dᴿ&cᴱ&fᴹ&cᴵ&bᵁ&aᴹ&l&c{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r§o{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f- &b{display_name}'
+  Helper:
+    chat: '§8• §cᴴᴱᴸᴾᴱᴿ§l§c{display_name}§f-§e{lvl}§8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f> &b{display_name}'
+  Builder:
+    chat: '&8• &cᴮᵁᴵᴸᴰᴱᴿ&l&b{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f> &b{display_name}'
   Admin:
-    chat: '&c[Admin] &7{fac_rank}{fac_name}&6 {display_name} &d>&b {msg}'
-    nametag: '&a[Admin]&e {fac_rank}{fac_name} &6{display_name}'
-    worlds: []
+    chat: '&8• &cᴬᴰᴹᴵᴺ&l&b{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f> &b{display_name}'
+  CoOwner:
+    chat: '&8• &cᶜᴼᴼᵂᴺᴱᴿ&l&b{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f> &b{display_name}'
   Owner:
-    chat: '&d[Owner] &c{fac_rank}{fac_name} &b{display_name} &c>&6> &b{msg}'
-    nametag: '&d[Owner]&c {fac_rank}{fac_name} &b{display_name}'
-    worlds: []
+    chat: '&8• &cᴼᵂᴺᴱᴿ&l&b{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f> &b{display_name}'
+  Founder:
+    chat: '&8• &dᶠᴼᵁᴺᴰᴱᴿ&l&4{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f> &b{display_name}'
   OP:
-    chat: '&a[OP] &5{fac_rank}{fac_name}&b {prefix}{display_name}{suffix} &c>&6> &f{msg}'
-    nametag: '&a[OP] &c{fac_rank}{fac_name} &b{display_name}'
-    worlds: []
-...
+    chat: '&8• &dᴼᴾ&l&4{display_name}&f-&e{lvl}&8 [&6{rank} &7{divr}&8] &a{fac_rank}{fac_name}§8 > §r{msg}'
+    nametag: '&l&f{rank} &7- &f{divr}{NL}{title}{NL}&l&e{lvl} &f> &b{display_name}'
+    
+#### = Multi-World = ####
+  worlds:
+    chat:
+      mochi:
+        Owner: '§8• §cᴼᵂᴺᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        CoOwner: '§8• §cᶜᴼᴼᵂᴺᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Admin: '§8• §cᴬᴰᴹᴵᴺ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Builder: '§8• §eᴮᵁᴵᴸᴰᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Helper: '§8• §fᴴᴱᴸᴾᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Premium: '§8• &eᴾ&dᴿ&cᴱ&fᴹ&cᴵ&bᵁ&aᴹ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Member: '§8• §fᴹᴱᴹᴮᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Guest: '§8• §l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+      school:
+        Owner: '§8• §cᴼᵂᴺᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        CoOwner: '§8• §cᶜᴼᴼᵂᴺᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Admin: '§8• §cᴬᴰᴹᴵᴺ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Builder: '§8• §eᴮᵁᴵᴸᴰᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Helper: '§8• §fᴴᴱᴸᴾᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Premium: '§8• &eᴾ&dᴿ&cᴱ&fᴹ&cᴵ&bᵁ&aᴹ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Member: '§8• §fᴹᴱᴹᴮᴱᴿ§l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+        Guest: '§8• §l§c{display_name}§8 | §f{prefix} §8> §r{msg}'
+    
+    nametag:
+      mochi:
+        Owner: '&l&5O W N E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &c{prefix}'
+        CoOwner: '&l&dC O O W N E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &c{prefix}'
+        Admin: '&l&cA D M I N{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &c{prefix}'
+        Builder: '&l&eB U I L D E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &e{prefix}'
+        Helper: '&l&fH E L P E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< {prefix}'
+        Premium: '&l&&8>c[ &6P R &fE M I&6 U M &c]&8<{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< {prefix}'
+        Member: '&l&eM E M B E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< {prefix}'
+        Guest: '&l&7G U E S T{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &7{prefix}'
+      school:
+        Owner: '&l&5O W N E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &c{prefix}'
+        CoOwner: '&l&dC O O W N E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &c{prefix}'
+        Admin: '&l&cA D M I N{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &c{prefix}'
+        Builder: '&l&eB U I L D E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &e{prefix}'
+        Helper: '&l&fH E L P E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< {prefix}'
+        Premium: '&l&&8>c[ &6P R &fE M I&6 U M &c]&8<{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< {prefix}'
+        Member: '&l&eM E M B E R{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< {prefix}'
+        Guest: '&l&7G U E S T{NL}{title}{NL}&l&e{lvl} &f> &b{display_name} &f< &7{prefix}'
