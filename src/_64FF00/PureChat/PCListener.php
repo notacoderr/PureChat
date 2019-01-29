@@ -42,7 +42,7 @@ class PCListener implements Listener
         $player = $event->getPlayer();
 	if($player instanceof Player)
 	{
-		$levelName = $player->getLevel()->getFolderName();//$this->plugin->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getFolderName() : null;
+		$levelName = $player->getLevel()->getFolderName();
 		$nameTag = $this->plugin->getNametag($player, $levelName);
 		$player->setNameTag($nameTag);
 	}
@@ -84,7 +84,7 @@ class PCListener implements Listener
         /** @var \pocketmine\Player $player */
         if(($player = $event->getEntity()) instanceof Player) return;
         $levelName = $event->getTarget()->getFolderName();
-        $nameTag = $this->plugin->getNametag($player, $event->getTarget()->getFolderName());
+        $nameTag = $this->plugin->getNametag($player, $levelName);
         $player->setNameTag($nameTag);
     }
 }
