@@ -82,7 +82,7 @@ class PCListener implements Listener
     public function onPlayerTeleport(EntityLevelChangeEvent $event)
     {
         /** @var \pocketmine\Player $player */
-        if(($player = $event->getEntity()) instanceof Player) return;
+        if(($player = $event->getEntity()) instanceof Player == false) return;
         $levelName = $event->getTarget()->getFolderName();
         $nameTag = $this->plugin->getNametag($player, $levelName);
         $player->setNameTag($nameTag);
