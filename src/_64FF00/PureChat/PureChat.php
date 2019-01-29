@@ -484,9 +484,9 @@ class PureChat extends PluginBase
      * @param null $levelName
      * @return mixed
      */
-    public function getChatFormat(Player $player, $message, $levelName = null)
+    public function getChatFormat(Player $player, $message, $levelName)
     {
-        $originalChatFormat = $this->getOriginalChatFormat($player);
+        $originalChatFormat = $this->getOriginalChatFormat($player, $levelName);
 
         $chatFormat = $this->applyColors($originalChatFormat);
         $chatFormat = $this->applyPCTags($chatFormat, $player, $message, null);
@@ -499,9 +499,9 @@ class PureChat extends PluginBase
      * @param null $levelName
      * @return mixed
      */
-    public function getNametag(Player $player, $levelName = null)
+    public function getNametag(Player $player, $levelName)
     {
-        $originalNametag = $this->getOriginalNametag($player);
+        $originalNametag = $this->getOriginalNametag($player, $levelName);
         $nameTag = $this->applyColors($originalNametag);
         $nameTag = $this->applyPCTags($nameTag, $player, null, null);
         return $nameTag;
