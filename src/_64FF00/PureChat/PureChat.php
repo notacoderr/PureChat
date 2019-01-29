@@ -182,10 +182,8 @@ class PureChat extends PluginBase
                     $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Usage: /setprefix <player> <prefix>");
                     return true;
                 }
-
-                $levelName = $this->config->get("enable-multiworld-chat") ? $sender->getLevel()->getName() : null;
                 
-                $this->setPrefix($args[1], $this->getServer()->getPlayer($args[0]), $levelName);
+                $this->setPrefix($args[1], $this->getServer()->getPlayer($args[0]));
 
                 //$sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set your prefix to " . $prefix . ".");
 
@@ -207,11 +205,9 @@ class PureChat extends PluginBase
                     return true;
                 }
 
-                $levelName = $this->config->get("enable-multiworld-chat") ? $sender->getLevel()->getName() : null;
-
                 $suffix = str_replace("{BLANK}", ' ', implode('', $args));
 
-                $this->setSuffix($suffix, $sender, $levelName);
+                $this->setSuffix($suffix, $sender);
 
                 $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " You set your suffix to " . $suffix . ".");
 
@@ -476,8 +472,8 @@ class PureChat extends PluginBase
 
         $string = str_replace("{world}", ($levelName === null ? "" : $levelName), $string);
 
-        $string = str_replace("{prefix}", $this->getPrefix($player, $levelName), $string);
-        $string = str_replace("{suffix}", $this->getSuffix($player, $levelName), $string);
+        $string = str_replace("{prefix}", $this->getPrefix($player), $string);
+        $string = str_replace("{suffix}", $this->getSuffix($player), $string);
 
         return $string;
     }
@@ -490,10 +486,10 @@ class PureChat extends PluginBase
      */
     public function getChatFormat(Player $player, $message, $levelName = null)
     {
-        $originalChatFormat = $this->getOriginalChatFormat($player, $levelName);
+        $originalChatFormat = $this->getOriginalChatFormat($player);
 
         $chatFormat = $this->applyColors($originalChatFormat);
-        $chatFormat = $this->applyPCTags($chatFormat, $player, $message, $levelName);
+        $chatFormat = $this->applyPCTags($chatFormat, $player, $message, null);
 
         return $chatFormat;
     }
@@ -505,11 +501,9 @@ class PureChat extends PluginBase
      */
     public function getNametag(Player $player, $levelName = null)
     {
-        $originalNametag = $this->getOriginalNametag($player, $levelName);
-
+        $originalNametag = $this->getOriginalNametag($player);
         $nameTag = $this->applyColors($originalNametag);
-        $nameTag = $this->applyPCTags($nameTag, $player, null, $levelName);
-
+        $nameTag = $this->applyPCTags($nameTag, $player, null, null);
         return $nameTag;
     }
 
@@ -518,220 +512,80 @@ class PureChat extends PluginBase
      * @param null $levelName
      * @return mixed
      */
-    public function getOriginalChatFormat(Player $player, $levelName = null)
+    public function getOriginalChatFormat(Player $player, $levelName)
     {
-        /** @var \_64FF00\PurePerms\PPGroup $group */
-        $group = $this->purePerms->getUserDataMgr()->getGroup($player, $levelName);
-
-        if($levelName === null)
+        $group = $this->purePerms->getUserDataMgr()->getGroup($player, null);
+        if($this->config->getNested("groups.worlds.chat." . $levelName . "." . $group->getName()) != null)
         {
+             return $this->config->getNested("groups.worlds.chat." . $levelName . "." . $group->getName());
+        } else {
             if($this->config->getNested("groups." . $group->getName() . ".chat") === null)
             {
-                $this->getLogger()->critical("Invalid chat format found in config.yml (Group: " . $group->getName() . ") / Setting it to default value.");
-
-                $this->config->setNested("groups." . $group->getName() . ".chat", "&8&l[" . $group->getName() . "]&f&r {display_name} &7> {msg}");
-
+                $this->getLogger()->critical("Invalid nametag found in config.yml (Group: " . $group->getName() . ") / Setting it to default value.");
+                $this->config->setNested("groups." . $group->getName() . ".chat", "&8&l[" . $group->getName() . "]&f&r {display_name}");
                 $this->config->save();
                 $this->config->reload();
             }
-
             return $this->config->getNested("groups." . $group->getName() . ".chat");
-        }
-        else
-        {
-            if($this->config->getNested("groups." . $group->getName() . "worlds.$levelName.chat") === null)
-            {
-                $this->getLogger()->critical("Invalid chat format found in config.yml (Group: " . $group->getName() . ", WorldName = $levelName) / Setting it to default value.");
-
-                $this->config->setNested("groups." . $group->getName() . "worlds.$levelName.chat", "&8&l[" . $group->getName() . "]&f&r {display_name} &7> {msg}");
-
-                $this->config->save();
-                $this->config->reload();
-            }
-
-            return $this->config->getNested("groups." . $group->getName() . "worlds.$levelName.chat");
-        }
+         }
     }
-
-    public function getOriginalNametag(Player $player, $levelName = null)
+   public function getOriginalNametag(Player $player, $levelName)
     {
         /** @var \_64FF00\PurePerms\PPGroup $group */
-        $group = $this->purePerms->getUserDataMgr()->getGroup($player, $levelName);
-
-        if($levelName === null)
+        $group = $this->purePerms->getUserDataMgr()->getGroup($player, null);
+        if($this->config->getNested("groups.worlds.nametag." . $levelName . "." . $group->getName()) != null)
         {
+             return $this->config->getNested("groups.worlds.nametag." . $levelName . "." . $group->getName());
+        } else {
             if($this->config->getNested("groups." . $group->getName() . ".nametag") === null)
             {
                 $this->getLogger()->critical("Invalid nametag found in config.yml (Group: " . $group->getName() . ") / Setting it to default value.");
-
                 $this->config->setNested("groups." . $group->getName() . ".nametag", "&8&l[" . $group->getName() . "]&f&r {display_name}");
-
                 $this->config->save();
                 $this->config->reload();
             }
-
             return $this->config->getNested("groups." . $group->getName() . ".nametag");
-        }
-        else
-        {
-            if($this->config->getNested("groups." . $group->getName() . "worlds.$levelName.nametag") === null)
-            {
-                $this->getLogger()->critical("Invalid nametag found in config.yml (Group: " . $group->getName() . ", WorldName = $levelName) / Setting it to default value.");
-
-                $this->config->setNested("groups." . $group->getName() . "worlds.$levelName.nametag", "&8&l[" . $group->getName() . "]&f&r {display_name}");
-
-                $this->config->save();
-                $this->config->reload();
-            }
-
-            return $this->config->getNested("groups." . $group->getName() . "worlds.$levelName.nametag");
-        }
+         }
     }
 
-    /**
-     * @param Player $player
-     * @param null $levelName
-     * @return mixed|null|string
-     */
-    public function getPrefix(Player $player, $levelName = null)
+    public function getPrefix(Player $player)
     {
-        if($levelName === null)
-        {
-            return $this->purePerms->getUserDataMgr()->getNode($player, "prefix");
-        }
-        else
-        {
-            $worldData = $this->purePerms->getUserDataMgr()->getWorldData($player, $levelName);
-
-            if(!isset($worldData["prefix"]) || $worldData["prefix"] === null)
-                return "";
-
-            return $worldData["prefix"];
-        }
+        return $this->purePerms->getUserDataMgr()->getNode($player, "prefix");
     }
-
-    /**
-     * @param Player $player
-     * @param null $levelName
-     * @return mixed|null|string
-     */
-    public function getSuffix(Player $player, $levelName = null)
+    
+    public function getSuffix(Player $player)
     {
-        if($levelName === null)
-        {
-            return $this->purePerms->getUserDataMgr()->getNode($player, "suffix");
-        }
-        else
-        {
-            $worldData = $this->purePerms->getUserDataMgr()->getWorldData($player, $levelName);
-
-            if(!isset($worldData["suffix"]) || $worldData["suffix"] === null)
-                return "";
-
-            return $worldData["suffix"];
-        }
+        return $this->purePerms->getUserDataMgr()->getNode($player, "suffix");
     }
 
-    /**
-     * @param PPGroup $group
-     * @param $chatFormat
-     * @param null $levelName
-     * @return bool
-     */
     public function setOriginalChatFormat(PPGroup $group, $chatFormat, $levelName = null)
     {
-        if($levelName === null)
-        {
-            $this->config->setNested("groups." . $group->getName() . ".chat", $chatFormat);
-        }
-        else
-        {
-            $this->config->setNested("groups." . $group->getName() . "worlds.$levelName.chat", $chatFormat);
-        }
-
+        $this->config->setNested("groups." . $group->getName() . ".chat", $chatFormat);
         $this->config->save();
-
         $this->config->reload();
-
         return true;
     }
-
-    /**
-     * @param PPGroup $group
-     * @param $nameTag
-     * @param null $levelName
-     * @return bool
-     */
+    
     public function setOriginalNametag(PPGroup $group, $nameTag, $levelName = null)
     {
-        if($levelName === null)
-        {
-            $this->config->setNested("groups." . $group->getName() . ".nametag", $nameTag);
-        }
-        else
-        {
-            $this->config->setNested("groups." . $group->getName() . "worlds.$levelName.nametag", $nameTag);
-        }
-
+        $this->config->setNested("groups." . $group->getName() . ".nametag", $nameTag);
         $this->config->save();
-
         $this->config->reload();
-
         return true;
     }
 
-    /**
-     * @param $prefix
-     * @param Player $player
-     * @param null $levelName
-     * @return bool
-     */
-    public function setPrefix($prefix, Player $player, $levelName = null)
+    public function setPrefix($prefix, Player $player)
     {
-        if($levelName === null)
-        {
-            $this->purePerms->getUserDataMgr()->setNode($player, "prefix", $prefix);
-        }
-        else
-        {
-            $worldData = $this->purePerms->getUserDataMgr()->getWorldData($player, $levelName);
-
-            $worldData["prefix"] = $prefix;
-
-            $this->purePerms->getUserDataMgr()->setWorldData($player, $levelName, $worldData);
-        }
-
+        $this->purePerms->getUserDataMgr()->setNode($player, "prefix", $prefix);
         return true;
     }
 
-    /**
-     * @param $suffix
-     * @param Player $player
-     * @param null $levelName
-     * @return bool
-     */
-    public function setSuffix($suffix, Player $player, $levelName = null)
+    public function setSuffix($suffix, Player $player)
     {
-        if($levelName === null)
-        {
-            $this->purePerms->getUserDataMgr()->setNode($player, "suffix", $suffix);
-        }
-        else
-        {
-            $worldData = $this->purePerms->getUserDataMgr()->getWorldData($player, $levelName);
-
-            $worldData["suffix"] = $suffix;
-
-            $this->purePerms->getUserDataMgr()->setWorldData($player, $levelName, $worldData);
-        }
-
+        $this->purePerms->getUserDataMgr()->setNode($player, "suffix", $suffix);
         return true;
     }
 
-    /**
-     * @param $string
-     * @return mixed
-     */
     public function stripColors($string)
     {
         $string = str_replace(TextFormat::BLACK, '', $string);
