@@ -43,7 +43,7 @@ class PureChat extends PluginBase
     private $factionsAPI;
 
     /** @var \_64FF00\PurePerms\PurePerms $purePerms */
-    private $purePerms;
+    private $purePerms, $cx2;
 
     public function onLoad()
     {
@@ -61,12 +61,12 @@ class PureChat extends PluginBase
         }
 
         $this->purePerms = $this->getServer()->getPluginManager()->getPlugin("PurePerms");
+        $this->cx2 = $this->getServer()->getPluginManager()->getPlugin("CoreX2");
     }
     
     public function onEnable()
     {
         $this->loadFactionsPlugin();
-
         $this->getServer()->getPluginManager()->registerEvents(new PCListener($this), $this);
     }
 
@@ -172,7 +172,7 @@ class PureChat extends PluginBase
 
                     return true;
                 }
-                if(!($this->getServer()->getPlayer($args[0]) instance of Player))
+                if(!($this->getServer()->getPlayer($args[0]) instanceof Player))
                 {
                     $sender->sendMessage(TextFormat::GREEN . self::MAIN_PREFIX . " Player is offline");
                     return true;
@@ -446,7 +446,21 @@ class PureChat extends PluginBase
     {
         // TODO
         $string = str_replace("{display_name}", $player->getDisplayName(), $string);
+        $dametucosita = $this->cx2->titles->getTitle($player);
+        $lvl = $this->cx2->data->getVal($player, "level");
+        $div = $this->cx2->elo->getDiv($player);
+        $divr = $this->cx2->elo->getDivRoman($player);
+	    $rank = $this->cx2->elo->getRank($player);
+	    $rankp = $this->cx2->elo->getRankPrefix($player);
 
+        $string = str_replace("{display_name}", $player->getDisplayName(), $string);
+        $string = str_replace("{title}", $dametucosita, $string);
+        $string = str_replace("{lvl}", $lvl, $string);
+        $string = str_replace("{rank}", $rank, $string);
+        $string = str_replace("{rankp}", $rankp, $string);
+        $string = str_replace("{div}", $div, $string);
+        $string = str_replace("{divr}", $divr, $string);
+        
         if($message === null)
             $message = "";
 
@@ -474,7 +488,7 @@ class PureChat extends PluginBase
 
         $string = str_replace("{prefix}", $this->getPrefix($player), $string);
         $string = str_replace("{suffix}", $this->getSuffix($player), $string);
-
+        $string = str_replace("{NL}",TextFormat::EOL , $string);
         return $string;
     }
 
