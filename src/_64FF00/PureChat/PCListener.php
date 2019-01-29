@@ -7,6 +7,7 @@ use _64FF00\PurePerms\event\PPGroupChangedEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\entity\EntityLevelChangeEvent;
 
 use pocketmine\Player;
 
@@ -39,15 +40,12 @@ class PCListener implements Listener
     {
         /** @var \pocketmine\IPlayer $player */
         $player = $event->getPlayer();
-		
-		if($player instanceof Player)
-		{
-			$levelName = $this->plugin->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getName() : null;
-
-			$nameTag = $this->plugin->getNametag($player, $levelName);
-
-			$player->setNameTag($nameTag);
-		}
+	if($player instanceof Player)
+	{
+		$levelName = $player->getLevel()->getFolderName();//$this->plugin->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getFolderName() : null;
+		$nameTag = $this->plugin->getNametag($player, $levelName);
+		$player->setNameTag($nameTag);
+	}
     }
 
     /**
@@ -58,10 +56,8 @@ class PCListener implements Listener
     {
         /** @var \pocketmine\Player $player */
         $player = $event->getPlayer();
-        $levelName = $this->plugin->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getName() : null;
-
+        $levelName = $player->getLevel()->getFolderName();
         $nameTag = $this->plugin->getNametag($player, $levelName);
-
         $player->setNameTag($nameTag);
     }
 
@@ -71,14 +67,24 @@ class PCListener implements Listener
      */
     public function onPlayerChat(PlayerChatEvent $event)
     {
-		if ($event->isCancelled()) return;
-		$player = $event->getPlayer();
+	if ($event->isCancelled()) return;
+	$player = $event->getPlayer();
         $message = $event->getMessage();
-
-        $levelName = $this->plugin->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getName() : null;
-
+        $levelName = $player->getLevel()->getFolderName();
         $chatFormat = $this->plugin->getChatFormat($player, $message, $levelName);
-
         $event->setFormat($chatFormat);
+    }
+	
+    /**
+     * @param EntityLevelChangeEvent $event
+     * @priority HIGH
+     */
+    public function onPlayerTeleport(EntityLevelChangeEvent $event)
+    {
+        /** @var \pocketmine\Player $player */
+        if(($player = $event->getEntity()) instanceof Player) return;
+        $levelName = $event->getTarget()->getFolderName();
+        $nameTag = $this->plugin->getNametag($player, $event->getTarget()->getFolderName());
+        $player->setNameTag($nameTag);
     }
 }
